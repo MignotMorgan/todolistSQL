@@ -1,0 +1,63 @@
+body {
+    display:grid;
+    grid-template-rows: 35% 30% 30%;
+    grid-template-columns: 35% 30% 35%;
+    margin-left: 750px;
+    margin-top:200px;
+    /* background-color: grey; */
+
+}
+
+.afaire {
+    grid-row:1;
+    grid-column:2;
+
+    max-height: 200px;
+    overflow: auto;
+
+    border: 2px solid black;
+
+    font-weight: bold;
+}
+
+.archive {
+    grid-row:2;
+    grid-column:2;
+
+    max-height: 200px;
+    overflow: auto;
+
+    border: 2px solid black;
+    /* background-color: grey; */
+}
+
+.nouveau {
+    grid-row:3;
+    grid-column:2;
+
+    padding: 15px;
+    border: 2px solid black;
+
+}
+.tache_terminer{
+
+  text-decoration:line-through;
+}
+.tache_non_terminer{
+
+}
+.timeover{
+  color: red;
+}
+.lbl_drag{
+  padding:10px;
+  display:block;
+
+  margin-bottom: 5px;
+
+  background: linear-gradient(to right, lightgrey, white);
+
+}
+.btn_submit{
+  display:none;
+}

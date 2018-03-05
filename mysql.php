@@ -6,7 +6,8 @@ function ConnectMySQL()
 {
   try
   {
-    $bdd = new PDO('mysql:host=localhost;dbname=todolist;charset=utf8', 'root', 'user');
+    // $bdd = new PDO('mysql:host=localhost;dbname=todolist;charset=utf8', 'root', 'user');
+    $bdd = new PDO('mysql:host=localhost;dbname=id4734921_todolist;charset=utf8', 'id4734921_root', 'webhost1974');
   }
   catch (Exception $e)
   {
@@ -15,12 +16,22 @@ function ConnectMySQL()
 
   return $bdd;
 }
-
+/*renvoi true/false : compte le nombre de tache qui possède déja le même nom*/
+function IsTask($name)
+{
+  $bdd = ConnectMySQL();
+  $req = $bdd->prepare('SELECT count(*) FROM taches WHERE Nom = :nom');
+  $req->execute(array(
+    'nom' => $name
+  ));
+  $number =  $req->fetchColumn();
+  return $number == 0;
+}
 
 function afficheMySQL($termin=false)
 {
   $bdd = ConnectMySQL();
-  $reponse = $bdd->query('SELECT * FROM `taches` ORDER BY Sort ASC');
+  $reponse = $bdd->query('SELECT * FROM taches ORDER BY Sort ASC');
 
   while ($donnees = $reponse->fetch())
   {
@@ -56,7 +67,7 @@ function afficheMySQL($termin=false)
       $txt .= '>';
       /*fin : balise <input>*/
       /*balise fermante <label>*/
-      $txt .= $donnees["Nom"]. '</label>';
+      $txt .= $donnees["Nom"] ." "  . '</label>';
 
       echo $txt;
     }

@@ -17,26 +17,28 @@ $result = filter_input_array(INPUT_POST, $options);
 $_Post["tache"] = filter_input(INPUT_POST, "tache", FILTER_SANITIZE_SPECIAL_CHARS );
 $_Post["tache"] = filter_input(INPUT_POST, "tache", FILTER_SANITIZE_ENCODED );
 
-$_POST["tache"] = filter_var($_POST["tache"], FILTER_SANITIZE_STRING);
-$_POST["ajouter"] = filter_var($_POST["ajouter"], FILTER_SANITIZE_STRING);
-$_POST["submit"] = filter_var($_POST["submit"], FILTER_SANITIZE_STRING);
-$_POST["tache_ligne"] = filter_var($_POST["tache_ligne"], FILTER_SANITIZE_STRING);
-$_POST["dragdrop"] = filter_var($_POST["dragdrop"], FILTER_SANITIZE_STRING);
-$_POST["src_index"] = filter_var($_POST["src_index"], FILTER_SANITIZE_STRING);
-$_POST["dest_index"] = filter_var($_POST["dest_index"], FILTER_SANITIZE_STRING);
-$_POST["date"] = filter_var($_POST["date"], FILTER_SANITIZE_STRING);
-$_POST["time"] = filter_var($_POST["time"], FILTER_SANITIZE_STRING);
+if( $_SERVER['REQUEST_METHOD']=='POST')
+{
+  if(isset($_POST["tache"])) $_POST["tache"] = filter_var($_POST["tache"], FILTER_SANITIZE_STRING);
+  if(isset($_POST["ajouter"])) $_POST["ajouter"] = filter_var($_POST["ajouter"], FILTER_SANITIZE_STRING);
+  if(isset($_POST["submit"])) $_POST["submit"] = filter_var($_POST["submit"], FILTER_SANITIZE_STRING);
+  if(isset($_POST["tache_ligne"])){ $_POST["tache_ligne"] = filter_var($_POST["tache_ligne"], FILTER_SANITIZE_STRING); }
+  if(isset($_POST["dragdrop"])) $_POST["dragdrop"] = filter_var($_POST["dragdrop"], FILTER_SANITIZE_STRING);
+  if(isset($_POST["src_index"])) $_POST["src_index"] = filter_var($_POST["src_index"], FILTER_SANITIZE_STRING);
+  if(isset($_POST["dest_index"])) $_POST["dest_index"] = filter_var($_POST["dest_index"], FILTER_SANITIZE_STRING);
+  if(isset($_POST["date"])) $_POST["date"] = filter_var($_POST["date"], FILTER_SANITIZE_STRING);
+  if(isset($_POST["time"])) $_POST["time"] = filter_var($_POST["time"], FILTER_SANITIZE_STRING);
 
-$_Post["tache"] = htmlentities($_POST["tache"]);
-$_Post["ajouter"] = htmlentities($_POST["ajouter"]);
-$_Post["submit"] = htmlentities($_POST["submit"]);
-$_Post["tache_ligne"] = htmlentities($_POST["tache_ligne"]);
-$_Post["dragdrop"] = htmlentities($_POST["dragdrop"]);
-$_Post["src_index"] = htmlentities($_POST["src_index"]);
-$_Post["dest_index"] = htmlentities($_POST["dest_index"]);
-$_Post["date"] = htmlentities($_POST["date"]);
-$_Post["time"] = htmlentities($_POST["time"]);
-
+  if(isset($_POST["tache"])) $_Post["tache"] = htmlentities($_POST["tache"]);
+  if(isset($_POST["ajouter"])) $_Post["ajouter"] = htmlentities($_POST["ajouter"]);
+  if(isset($_POST["submit"])) $_Post["submit"] = htmlentities($_POST["submit"]);
+  if(isset($_POST["tache_ligne"])) $_Post["tache_ligne"] = htmlentities($_POST["tache_ligne"]);
+  if(isset($_POST["dragdrop"])) $_Post["dragdrop"] = htmlentities($_POST["dragdrop"]);
+  if(isset($_POST["src_index"])) $_Post["src_index"] = htmlentities($_POST["src_index"]);
+  if(isset($_POST["dest_index"])) $_Post["dest_index"] = htmlentities($_POST["dest_index"]);
+  if(isset($_POST["date"])) $_Post["date"] = htmlentities($_POST["date"]);
+  if(isset($_POST["time"])) $_Post["time"] = htmlentities($_POST["time"]);
+}
 /*fin Sanitisation*/
 
 
@@ -49,21 +51,15 @@ if($result != null && $result != FALSE && $_SERVER['REQUEST_METHOD']=='POST')
   {
     /*nom de la tache contenu dans le "TextBox"*/
     $tache=$_POST["tache"];
-    /*date et time*/
-    $date = empty($_POST["date"]) ? date("Y-m-d") : $_POST["date"] ;
-    $time = empty($_POST["time"]) ? date("H:i:s") : $_POST["time"].":00";
-    $datetime = $date ." ". $time;
+    if(!empty($tache) && IsTask($tache))
+    {
+      /*date et time*/
+      $date = empty($_POST["date"]) ? date("Y-m-d") : $_POST["date"] ;
+      $time = empty($_POST["time"]) ? date("H:i:s") : $_POST["time"].":00";
+      $datetime = $date ." ". $time;
 
-    // $date = $_POST["date"];
-    // $time = $_POST["time"];
-    // $datetime = (empty($date) || empty($time)) ? date("Y-m-d H:i:s") :  $date ." ". $time .":00";
- // empty($_POST["date"]) ? date("Y-m-d H:i:s") :
-
-
-    // echo $datetime;
-    /*utilisation de la fonction ecrireJSON*/
-    // ecrireJSON($tache, false);
-    InsertMySQL($tache, false, $datetime);
+      InsertMySQL($tache, false, $datetime);
+    }
   }
   /*vérifie si on a cliqué sur le bouton "Enregistrer".*/
   if(isset($_POST["submit"]) && $_POST["submit"] == "Enregistrer")
@@ -74,7 +70,8 @@ if($result != null && $result != FALSE && $_SERVER['REQUEST_METHOD']=='POST')
     // for($i = 0; $i < sizeof($tache_ligne); $i++)
     //   enregistreJSON($tache_ligne[$i]);
     // enregistreJSON($tache_ligne);
-    updateMySQL($tache_ligne);
+    if(!empty($tache_ligne))
+      updateMySQL($tache_ligne);
   }
   /*Requete POST provenant de la fonction "post_dragdrop" du fichier javascript (script.js)*/
   if(isset($_POST["dragdrop"]) && $_POST["dragdrop"] == "true")
